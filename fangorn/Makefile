@@ -16,18 +16,22 @@ PACKAGE_VER_PATCH = 1
 PACKAGE_RELEASE = 0
 
 
+LinkFlags+=$(shell root-config --libs)
 ExecutableLinkFlags+=$(shell root-config --libs)
 
-Library = 
+Library = fangorn
 
 Includes = \
     include \
     $(ROOTSYS)/include 
 
-Libraries = 
+Libraries = c++
 
 LibraryPaths = \
+  lib \
   $(ROOTSYS)/lib 
+
+ExecutableLibraries += fangorn c++
 
 include ${FANGORN_ROOT}/config/mfRules.mk
 include ${FANGORN_ROOT}/config/mfRPMRules.mk

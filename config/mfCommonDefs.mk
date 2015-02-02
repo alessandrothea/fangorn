@@ -17,9 +17,13 @@ ifeq ($(UNAME),Linux)
     else ifneq ($(findstring redhat-6,$(FANGORN_PLATFORM)),)
         FANGORN_OS=slc6
     endif
+    DynLibFlag="-shared"
+    DynLibExt="so"
 endif
 ifeq ($(UNAME),Darwin)
     FANGORN_OS=osx
+    DynLibFlag="-shared"
+	DynLibExt="dylib"
 endif
 
 $(info OS Detected: $(FANGORN_OS))
@@ -37,8 +41,8 @@ export LD_LIBRARY_PATH
 
 
 ## Compilers
-CPP:=g++
-LD:=g++
+CPP:=clang
+LD:=clang
 	
 ## Tools
 MakeDir=mkdir -p
@@ -49,12 +53,12 @@ PYTHON_INCLUDE_PREFIX ?= $(shell python -c "import distutils.sysconfig;print dis
 
 ifndef DEBUG
 # Compiler flags
-CxxFlags = -g -Wall -O3 -MMD -MP -fPIC -std=c++0x
-LinkFlags = -g -shared -fPIC -Wall -O3 
+CxxFlags = -g -Wall -O3 -MMD -MP -fPIC -std=c++11
+LinkFlags = -g $(DynLibFlag) -fPIC -Wall -O3 
 ExecutableLinkFlags = -g -Wall -O3
 else
-CxxFlags = -g -ggdb -Wall -MMD -MP -fPIC -std=c++0x
-LinkFlags = -g -ggdb -shared -fPIC -Wall
+CxxFlags = -g -ggdb -Wall -MMD -MP -fPIC -std=c++11
+LinkFlags = -g -ggdb $(DynLibFlag) -fPIC -Wall 
 ExecutableLinkFlags = -g -ggdb -Wall
 endif
 
