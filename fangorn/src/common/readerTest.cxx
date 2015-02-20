@@ -5,7 +5,10 @@
 #include "TTreeReaderValue.h"
 #include "TTreeReaderArray.h"
 #include "TVector3.h"
-#include "TFile.h"
+#include "Math/LorentzVector.h"
+
+
+typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > XYZTLorentzVector;
 
 bool CheckEntry( TTreeReader::EEntryStatus status) {
       if (status == TTreeReader::kEntryValid) {
@@ -39,32 +42,6 @@ bool CheckEntry( TTreeReader::EEntryStatus status) {
       }
 }
 
-void simpleTree( Long64_t entry = -1 ) {
-    TFile f("tree3.root");
-    TTree* t3 = static_cast<TTree*>(f.Get("t3"));
-
-    TTreeReader reader(t3);
-
-    TTreeReaderValue<Int_t> nTrack(reader, "ntrack");
-
-    std::cout << "Get entries " << reader.GetEntries(true) << std::endl;
-
-
-    if ( entry == -1)
-        reader.Next();
-    else 
-        reader.SetEntry(entry);
-
-
-    if ( !CheckEntry(reader.GetEntryStatus()) )
-        return;
-    else
-        std::cout << "Loaded entry " << reader.GetCurrentEntry() << '\n';
-
-    f.Close();
-
-
-}
 
 void readerTest( Long64_t entry = -1 ) {
     TChain* c = new TChain("t3");
@@ -75,6 +52,7 @@ void readerTest( Long64_t entry = -1 ) {
     TTreeReader reader(c);
     TTreeReaderValue<Int_t> nTrack(reader, "ntrack");
     // TTreeReaderValue<TVector3> pos(reader, "pos");
+    TTreeReaderValue<XYZTLorentzVector> pt(reader, "pt");
     TTreeReaderValue< std::vector<double> > vec(reader, "vec");
 
     std::cout << "Get entries " << reader.GetEntries(true) << std::endl;
@@ -98,13 +76,13 @@ void readerTest( Long64_t entry = -1 ) {
 
     std::cout << "ntrack status " << nTrack.GetReadStatus() << " value " << *nTrack << std::endl;
     // std::cout << "pos status " << pos.GetReadStatus() << " pointer " << pos.Get() << std::endl;
+    std::cout << "pt status " << pt.GetReadStatus() << " pointer " << pt.Get() << std::endl;
+
     std::cout << "vec status " << vec.GetReadStatus() << " size " << vec->size() << std::endl;
 }
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "----" << std::endl;
-    simpleTree(9);
     std::cout << "----" << std::endl;
     readerTest(10);
     std::cout << "----" << std::endl;

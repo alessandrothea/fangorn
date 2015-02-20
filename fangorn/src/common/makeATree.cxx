@@ -4,6 +4,10 @@
 #include "TLeaf.h"
 #include "TVector3.h"
 #include "TLorentzVector.h"
+#include "Math/LorentzVector.h"
+
+// #include "Math/GenVector/DisplacementVector3D.h"
+typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > XYZTLorentzVector;
 
 void create() {
     const Int_t kMaxTrack = 500;
@@ -12,6 +16,7 @@ void create() {
     Float_t px[kMaxTrack];
     Double_t sumstat;
     TVector3* pos = 0x0;
+    XYZTLorentzVector* pt = 0x0;
     std::vector<double> *vec = new std::vector<double>;
     
     TFile f("tree3.root","recreate");
@@ -22,6 +27,7 @@ void create() {
     t3->Branch("px",px,"px[ntrack]/F");
     t3->Branch("sumstat",&sumstat,"sumstat/D");
     t3->Branch("pos", &pos);
+    t3->Branch("pt", &pt);
     t3->Branch("vec", &vec);
 
 
@@ -36,6 +42,7 @@ void create() {
         sumstat = i/2.;
         pos->SetXYZ(i,i+1,i+2);
         vec->push_back(i);
+        pt->SetXYZT(i,i+1,i+2,i+3);
         t3->Fill();
 
     }

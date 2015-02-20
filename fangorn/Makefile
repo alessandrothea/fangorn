@@ -25,13 +25,13 @@ Includes = \
     include \
     $(ROOTSYS)/include 
 
-Libraries = c++
+Libraries = c++ 
 
 LibraryPaths = \
   lib \
   $(ROOTSYS)/lib 
 
-ExecutableLibraries += fangorn c++
+ExecutableLibraries += fangorn c++ TreePlayer Physics
 
 include ${FANGORN_ROOT}/config/mfRules.mk
 include ${FANGORN_ROOT}/config/mfRPMRules.mk
